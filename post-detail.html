@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>帖子详情</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #F8F9FA;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .phone-frame {
+            width: 430px;
+            height: 932px;
+            background: white;
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+            border: 10px solid #1a1a1a;
+            margin: 20px auto;
+        }
+        .phone-screen {
+            height: 100%;
+            overflow-y: auto;
+        }
+        .main-content {
+            padding: 24px 20px 80px 20px;
+        }
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .post-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            overflow: hidden;
+        }
+        .post-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .post-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .post-author {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .post-location {
+            font-size: 13px;
+            color: #888;
+        }
+        .post-image-container {
+            width: 100%;
+            height: 260px;
+            background: #f8f8f8;
+            border-radius: 16px;
+            margin: 16px 0 12px 0;
+            overflow: hidden;
+        }
+        .post-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .post-caption {
+            font-size: 16px;
+            margin-bottom: 18px;
+            color: #444;
+        }
+        .comment-section {
+            margin-top: 24px;
+        }
+        .comment-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .comment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .comment-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .comment-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            overflow: hidden;
+        }
+        .comment-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .comment-content {
+            background: #F3F0FF;
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-size: 14px;
+            color: #555;
+            max-width: 270px;
+        }
+        .back-btn {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            z-index: 10;
+        }
+        .back-btn svg {
+            width: 22px;
+            height: 22px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="phone-screen">
+            <div class="main-content">
+                <div class="back-btn" onclick="window.history.back()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 18l-6-6 6-6" stroke-width="2"/></svg>
+                </div>
+                <div class="post-header">
+                    <div class="post-avatar">
+                        <img src="https://img.freepik.com/free-vector/cute-parrot-cartoon-character_1308-134932.jpg" alt="Ava Sadie">
+                    </div>
+                    <div class="post-info">
+                        <div class="post-author">Ava Sadie</div>
+                        <div class="post-location">Sylhet, Bangladesh</div>
+                    </div>
+                </div>
+                <div class="post-image-container">
+                    <img class="post-image" src="./image/share (1).png" alt="分享图片1">
+                </div>
+                <div class="post-caption">
+                    今天在雨林里发现了好多有趣的小动物，还和朋友们一起完成了鹦鹉栖息地的挑战任务！🌳🦜<br>大家一起来分享探险的快乐吧！
+                </div>
+                <div class="comment-section">
+                    <div class="comment-title">评论区</div>
+                    <div class="comment-list">
+                        <div class="comment-item">
+                            <div class="comment-avatar">
+                                <img src="https://img.freepik.com/free-vector/cute-macaw-cartoon-character_1308-134934.jpg" alt="Luna">
+                            </div>
+                            <div class="comment-content">太棒啦！下次带我一起去吧！</div>
+                        </div>
+                        <div class="comment-item">
+                            <div class="comment-avatar">
+                                <img src="https://img.freepik.com/free-vector/cute-love-bird-cartoon-character_1308-134935.jpg" alt="Milo">
+                            </div>
+                            <div class="comment-content">鹦鹉真的好可爱，期待你的更多分享！</div>
+                        </div>
+                        <div class="comment-item">
+                            <div class="comment-avatar">
+                                <img src="https://img.freepik.com/free-vector/cute-cockatoo-cartoon-character_1308-134933.jpg" alt="Kiwi">
+                            </div>
+                            <div class="comment-content">我也完成了挑战，超级有成就感！</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

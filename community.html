@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>探险交流 - 社区</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            min-height: 100vh;
+            background: #F8F9FA;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            letter-spacing: 0.02em;
+            line-height: 1.7;
+        }
+
+        .phone-frame {
+            width: 430px;
+            height: 932px;
+            background: white;
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+            border: 10px solid #1a1a1a;
+            margin: 20px auto;
+            position: fixed;
+            top: 48%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .phone-screen {
+            height: 100%;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .main-content {
+            padding: 20px;
+            height: auto;
+            min-height: min-content;
+            padding-bottom: 80px;
+        }
+
+        .header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .header-title .welcome {
+            font-size: 16px;
+            font-weight: 400;
+            color: #666;
+        }
+
+        .header-title .main-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #000;
+            letter-spacing: 0.04em;
+        }
+
+        /* 导航栏样式 */
+        .nav-bar {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            width: auto;
+            min-width: 420px;
+            gap: 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            color: #666;
+            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-item.active {
+            color: #8B5CF6;
+            background: rgba(139, 92, 246, 0.1);
+            min-width: max-content;
+        }
+
+        .nav-icon {
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* 隐藏非活动项的文本 */
+        .nav-item:not(.active) span {
+            display: none;
+        }
+
+        /* 活动项显示文本 */
+        .nav-item.active span {
+            display: block;
+        }
+
+        @media (max-width: 480px) {
+            .nav-bar {
+                min-width: 360px;
+                padding: 8px 12px;
+                gap: 8px;
+            }
+            
+            .nav-item {
+                padding: 6px 10px;
+            }
+        }
+
+        /* 社区页面特定样式 */
+        .community-content {
+            padding: 28px 0 18px 0;
+        }
+
+        /* 关注用户头像栏 */
+        .following-users {
+            display: flex;
+            gap: 16px;
+            padding: 0 0 20px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            margin: 0 -20px;
+            padding: 0 20px 20px;
+            margin-bottom: 10px;
+        }
+
+        .following-users::-webkit-scrollbar {
+            display: none;
+        }
+
+        .user-avatar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border: none;
+            box-shadow: none;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-avatar.active {
+            border: 2px solid #FF69B4;
+        }
+
+        .user-name {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            letter-spacing: 0.03em;
+        }
+
+        .camera-icon {
+            width: 32px;
+            height: 32px;
+            color: #666;
+        }
+
+        /* 动态列表样式更新 */
+        .post-list {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .post-card {
+            background: white;
+            border-radius: 20px;
+            padding: 22px 18px 20px 18px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            overflow: hidden;
+        }
+
+        .post-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .post-info {
+            gap: 2px;
+        }
+
+        .post-author {
+            letter-spacing: 0.04em;
+            font-size: 17px;
+            margin-bottom: 2px;
+        }
+
+        .post-location {
+            margin-bottom: 2px;
+        }
+
+        .post-image-container {
+            width: 100%;
+            height: 200px;
+            background: #f8f8f8;
+            border-radius: 14px;
+            margin: 18px 0 18px 0;
+            overflow: hidden;
+        }
+
+        .post-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .post-caption {
+            font-size: 16px;
+            line-height: 1.8;
+            letter-spacing: 0.03em;
+            margin-bottom: 18px;
+            color: #444;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 16px;
+        }
+
+        .action-group {
+            display: flex;
+            gap: 28px;
+        }
+
+        .post-action {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #666;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.02em;
+        }
+
+        .post-action:hover {
+            color: #8B5CF6;
+        }
+
+        .post-action.active {
+            color: #8B5CF6;
+        }
+
+        .post-action svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .post-action.liked {
+            color: #A259FF;
+            background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 8px rgba(162,89,255,0.10);
+        }
+        .post-action.liked svg {
+            fill: url(#like-gradient);
+            filter: drop-shadow(0 2px 8px #a18cd1aa);
+        }
+        .post-action.favorited {
+            color: #F59E42;
+            background: linear-gradient(90deg, #fbc2eb 0%, #f59e42 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 8px rgba(245,158,66,0.10);
+        }
+        .post-action.favorited svg {
+            fill: url(#fav-gradient);
+            filter: drop-shadow(0 2px 8px #fbc2ebaa);
+        }
+
+        .strategy-tag {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #fff;
+            margin-right: 6px;
+            margin-bottom: 2px;
+            font-weight: 500;
+        }
+        .tag-ask { background: #8B5CF6; }
+        .tag-try { background: #F59E42; }
+        .tag-guess { background: #10B981; }
+        .tag-learn { background: #F472B6; }
+
+        @keyframes scale-bounce {
+            0% { transform: scale(1);}
+            30% { transform: scale(1.3);}
+            60% { transform: scale(0.92);}
+            100% { transform: scale(1);}
+        }
+        .post-action.animate-bounce svg {
+            animation: scale-bounce 0.5s cubic-bezier(.36,1.56,.64,1) both;
+        }
+
+        .fab-post {
+            position: fixed;
+            right: 38px;
+            bottom: 100px;
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            background: linear-gradient(120deg, #a18cd1 0%, #fbc2eb 100%);
+            box-shadow: 0 6px 24px rgba(139,92,246,0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1200;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+        .fab-post:hover,
+        .fab-post:active,
+        .fab-post:focus {
+            box-shadow: 0 10px 32px rgba(139,92,246,0.28);
+            opacity: 1;
+        }
+        .fab-post svg {
+            width: 34px;
+            height: 34px;
+            color: #fff;
+        }
+        .post-modal-mask {
+            position: fixed;
+            left: 0; top: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.18);
+            z-index: 1300;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .post-modal {
+            background: #fff;
+            border-radius: 18px;
+            padding: 32px 28px 24px 28px;
+            box-shadow: 0 8px 32px rgba(139,92,246,0.10);
+            min-width: 320px;
+            max-width: 90vw;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            align-items: stretch;
+        }
+        .post-modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #8B5CF6;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .post-modal textarea {
+            border-radius: 10px;
+            border: 1.5px solid #eee;
+            padding: 10px 14px;
+            font-size: 15px;
+            min-height: 60px;
+            resize: vertical;
+            outline: none;
+        }
+        .post-modal input[type='file'] {
+            margin-top: 6px;
+        }
+        .post-modal-btns {
+            display: flex;
+            gap: 18px;
+            justify-content: flex-end;
+            margin-top: 8px;
+        }
+        .post-modal-btn {
+            padding: 7px 22px;
+            border-radius: 16px;
+            font-size: 15px;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+            color: #fff;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .post-modal-btn.cancel {
+            background: #eee;
+            color: #888;
+        }
+    </style>
+    <script>
+        function triggerBounce(element) {
+            element.classList.add('animate-bounce');
+            const svg = element.querySelector('svg');
+            if (svg) {
+                svg.addEventListener('animationend', function handler() {
+                    element.classList.remove('animate-bounce');
+                    svg.removeEventListener('animationend', handler);
+                });
+            }
+        }
+
+        function toggleLike(element) {
+            const likeCount = element.querySelector('span');
+            const currentCount = parseInt(likeCount.textContent);
+            const isLiked = element.classList.contains('liked');
+            if (isLiked) {
+                likeCount.textContent = currentCount - 1;
+                element.classList.remove('liked');
+            } else {
+                likeCount.textContent = currentCount + 1;
+                element.classList.add('liked');
+            }
+            triggerBounce(element);
+        }
+
+        function toggleFavorite(element) {
+            const favoriteCount = element.querySelector('span');
+            const currentCount = parseInt(favoriteCount.textContent);
+            const isFavorited = element.classList.contains('favorited');
+            if (isFavorited) {
+                favoriteCount.textContent = currentCount - 1;
+                element.classList.remove('favorited');
+            } else {
+                favoriteCount.textContent = currentCount + 1;
+                element.classList.add('favorited');
+            }
+            triggerBounce(element);
+        }
+
+        function showPostModal() {
+            document.getElementById('postModalMask').style.display = 'flex';
+        }
+        function hidePostModal() {
+            document.getElementById('postModalMask').style.display = 'none';
+        }
+        function submitPost() {
+            hidePostModal();
+            alert('发布成功！（仅UI演示，未真正保存）');
+        }
+    </script>
+  </head>
+  <body>
+    <div class="phone-frame">
+        <div class="phone-screen">
+            <div class="main-content">
+                <header class="header">
+                    <h1 class="header-title">
+                        <span class="welcome">探险交流</span>
+                        <span class="main-title">社区动态</span>
+                    </h1>
+                </header>
+
+                <div class="community-content">
+                    <!-- 关注用户头像栏 -->
+                    <div class="following-users">
+                        <div class="user-avatar-wrapper">
+                            <div class="user-avatar">
+                                <svg class="camera-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" stroke-width="2"/>
+                                    <circle cx="12" cy="13" r="4" stroke-width="2"/>
+                                </svg>
+                            </div>
+                            <span class="user-name">You</span>
+                        </div>
+                        <div class="user-avatar-wrapper">
+                            <a href="user-profile.html?user=olivia">
+                                <div class="user-avatar active">
+                                    <img src="https://img.freepik.com/free-vector/cute-parrot-cartoon-character_1308-134932.jpg" alt="Olivia">
+                                </div>
+                            </a>
+                            <span class="user-name">Olivia</span>
+                        </div>
+                        <div class="user-avatar-wrapper">
+                            <a href="user-profile.html?user=avery">
+                                <div class="user-avatar">
+                                    <img src="https://img.freepik.com/free-vector/cute-macaw-cartoon-character_1308-134934.jpg" alt="Avery">
+                                </div>
+                            </a>
+                            <span class="user-name">Avery</span>
+                        </div>
+                        <div class="user-avatar-wrapper">
+                            <a href="user-profile.html?user=emily">
+                                <div class="user-avatar">
+                                    <img src="https://img.freepik.com/free-vector/cute-love-bird-cartoon-character_1308-134935.jpg" alt="Emily">
+                                </div>
+                            </a>
+                            <span class="user-name">Emily</span>
+                        </div>
+                        <div class="user-avatar-wrapper">
+                            <a href="user-profile.html?user=aurora">
+                                <div class="user-avatar">
+                                    <img src="https://img.freepik.com/free-vector/cute-cockatoo-cartoon-character_1308-134933.jpg" alt="Aurora">
+                                </div>
+                            </a>
+                            <span class="user-name">Aurora</span>
+                        </div>
+                    </div>
+
+                    <!-- 动态列表 -->
+                    <div class="post-list">
+                        <div class="post-card" onclick="window.location.href='post-detail-1.html'" style="cursor:pointer;">
+                            <div class="post-header">
+                                <div class="post-avatar">
+                                    <a href="user-profile.html?user=ava sadie">
+                                        <img src="https://img.freepik.com/free-vector/cute-parrot-cartoon-character_1308-134932.jpg" alt="Ava Sadie">
+                                    </a>
+                                </div>
+                                <div class="post-info">
+                                    <div class="post-author">Ava Sadie</div>
+                                    <div class="post-location">
+                                        <span class="strategy-tag tag-ask">问问鹦鹉</span>
+                                        <span class="strategy-tag tag-guess">猜猜鹦鹉</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="post-image-container">
+                                <img class="post-image" src="./image/share (1).png" alt="分享图片1">
+                            </div>
+                            <div class="post-actions">
+                                <div class="action-group">
+                                    <div class="post-action" onclick="event.stopPropagation();toggleLike(this)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                        </svg>
+                                        <span>42</span>
+                                    </div>
+                                    <div class="post-action">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/>
+                                        </svg>
+                                        <span>12</span>
+                                    </div>
+                                    <div class="post-action" onclick="event.stopPropagation();toggleFavorite(this)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+                                        </svg>
+                                        <span>8</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="post-card" onclick="window.location.href='post-detail-2.html'" style="cursor:pointer;">
+                            <div class="post-header">
+                                <div class="post-avatar">
+                                    <a href="user-profile.html?user=ava sadie">
+                                        <img src="https://img.freepik.com/free-vector/cute-parrot-cartoon-character_1308-134932.jpg" alt="Ava Sadie">
+                                    </a>
+                                </div>
+                                <div class="post-info">
+                                    <div class="post-author">Ava Sadie</div>
+                                    <div class="post-location">
+                                        <span class="strategy-tag tag-ask">问问鹦鹉</span>
+                                        <span class="strategy-tag tag-guess">猜猜鹦鹉</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="post-image-container">
+                                <img class="post-image" src="./image/share (2).png" alt="分享图片2">
+                            </div>
+                            <div class="post-actions">
+                                <div class="action-group">
+                                    <div class="post-action" onclick="event.stopPropagation();toggleLike(this)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                        </svg>
+                                        <span>35</span>
+                                    </div>
+                                    <div class="post-action">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/>
+                                        </svg>
+                                        <span>9</span>
+                                    </div>
+                                    <div class="post-action" onclick="event.stopPropagation();toggleFavorite(this)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+                                        </svg>
+                                        <span>6</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="post-card" onclick="window.location.href='post-detail-3.html'" style="cursor:pointer;">
+                            <div class="post-header">
+                                <div class="post-avatar">
+                                    <img src="https://img.freepik.com/free-vector/cute-macaw-cartoon-character_1308-134934.jpg" alt="Luna">
+                                </div>
+                                <div class="post-info">
+                                    <div class="post-author">Luna</div>
+                                    <div class="post-location">
+                                        <span class="strategy-tag tag-ask">问问鹦鹉</span>
+                                        <span class="strategy-tag tag-guess">猜猜鹦鹉</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="post-image-container">
+                                <img class="post-image" src="./image/share (3).png" alt="分享图片3">
+                            </div>
+                            <div class="post-actions">
+                                <div class="action-group">
+                                    <div class="post-action" onclick="event.stopPropagation();toggleLike(this)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                        </svg>
+                                        <span>28</span>
+                                    </div>
+                                    <div class="post-action">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/>
+                                        </svg>
+                                        <span>7</span>
+                                    </div>
+                                    <div class="post-action" onclick="event.stopPropagation();toggleFavorite(this)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+                                        </svg>
+                                        <span>5</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="post-card" onclick="window.location.href='post-detail-4.html'" style="cursor:pointer;">
+                            <div class="post-header">
+                                <div class="post-avatar">
+                                    <img src="https://img.freepik.com/free-vector/cute-love-bird-cartoon-character_1308-134935.jpg" alt="Milo">
+                                </div>
+                                <div class="post-info">
+                                    <div class="post-author">Milo</div>
+                                    <div class="post-location">
+                                        <span class="strategy-tag tag-learn">学学鹦鹉</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="post-image-container">
+                                <img class="post-image" src="./image/share (4).png" alt="分享图片4">
+                            </div>
+                            <div class="post-actions">
+                                <div class="action-group">
+                                    <div class="post-action" onclick="event.stopPropagation();toggleLike(this)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                        </svg>
+                                        <span>31</span>
+                                    </div>
+                                    <div class="post-action">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/>
+                                        </svg>
+                                        <span>8</span>
+                                    </div>
+                                    <div class="post-action" onclick="event.stopPropagation();toggleFavorite(this)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+                                        </svg>
+                                        <span>4</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="post-card" onclick="window.location.href='post-detail-5.html'" style="cursor:pointer;">
+                            <div class="post-header">
+                                <div class="post-avatar">
+                                    <img src="https://img.freepik.com/free-vector/cute-cockatoo-cartoon-character_1308-134933.jpg" alt="Kiwi">
+                                </div>
+                                <div class="post-info">
+                                    <div class="post-author">Kiwi</div>
+                                    <div class="post-location">
+                                        <span class="strategy-tag tag-try">试试鹦鹉</span>
+                                        <span class="strategy-tag tag-learn">学学鹦鹉</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="post-image-container">
+                                <img class="post-image" src="./image/share (5).png" alt="分享图片5">
+                            </div>
+                            <div class="post-actions">
+                                <div class="action-group">
+                                    <div class="post-action" onclick="event.stopPropagation();toggleLike(this)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                        </svg>
+                                        <span>25</span>
+                                    </div>
+                                    <div class="post-action">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/>
+                                        </svg>
+                                        <span>6</span>
+                                    </div>
+                                    <div class="post-action" onclick="event.stopPropagation();toggleFavorite(this)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+                                        </svg>
+                                        <span>3</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="post-card" onclick="window.location.href='post-detail-6.html'" style="cursor:pointer;">
+                            <div class="post-header">
+                                <div class="post-avatar">
+                                    <img src="https://img.freepik.com/free-vector/cute-parrot-cartoon-character_1308-134932.jpg" alt="Pepper">
+                                </div>
+                                <div class="post-info">
+                                    <div class="post-author">Pepper</div>
+                                    <div class="post-location">
+                                        <span class="strategy-tag tag-ask">问问鹦鹉</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="post-image-container">
+                                <img class="post-image" src="./image/share (6).png" alt="分享图片6">
+                            </div>
+                            <div class="post-actions">
+                                <div class="action-group">
+                                    <div class="post-action" onclick="event.stopPropagation();toggleLike(this)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                        </svg>
+                                        <span>19</span>
+                                    </div>
+                                    <div class="post-action">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/>
+                                        </svg>
+                                        <span>5</span>
+                                    </div>
+                                    <div class="post-action" onclick="event.stopPropagation();toggleFavorite(this)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+                                        </svg>
+                                        <span>2</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 底部导航栏 -->
+                <nav class="nav-bar">
+                    <a href="index.html" class="nav-item">
+                        <div class="nav-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 3L4 9V21H20V9L12 3ZM10 19H8V12H10V19ZM14 19H12V14H14V19ZM18 19H16V16H18V19Z"/>
+                            </svg>
+                        </div>
+                        <span>探险主岛</span>
+                    </a>
+                    <a href="community.html" class="nav-item active">
+                        <div class="nav-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM12 11C11.4 11 11 10.6 11 10C11 9.4 11.4 9 12 9C12.6 9 13 9.4 13 10C13 10.6 12.6 11 12 11ZM16 11C15.4 11 15 10.6 15 10C15 9.4 15.4 9 16 9C16.6 9 17 9.4 17 10C17 10.6 16.6 11 16 11ZM8 11C7.4 11 7 10.6 7 10C7 9.4 7.4 9 8 9C8.6 9 9 9.4 9 10C9 10.6 8.6 11 8 11Z"/>
+                            </svg>
+                        </div>
+                        <span>探险交流</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <div class="nav-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/>
+                            </svg>
+                        </div>
+                        <span>知识岛屿</span>
+                    </a>
+                    <a href="profile.html" class="nav-item">
+                        <div class="nav-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 5C13.66 5 15 6.34 15 8C15 9.66 13.66 11 12 11C10.34 11 9 9.66 9 8C9 6.34 10.34 5 12 5ZM12 19.2C9.5 19.2 7.29 17.92 6 15.98C6.03 13.99 10 12.9 12 12.9C13.99 12.9 17.97 13.99 18 15.98C16.71 17.92 14.5 19.2 12 19.2Z"/>
+                            </svg>
+                        </div>
+                        <span>我的鹦鹉</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="fab-post" onclick="window.location.href='create-post.html'">
+        <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="24" fill="none"/><path d="M24 14v20M14 24h20" stroke="white" stroke-width="4" stroke-linecap="round"/></svg>
+    </div>
+    <div id="postModalMask" class="post-modal-mask" style="display:none;">
+        <div class="post-modal">
+            <div class="post-modal-title">发布新动态</div>
+            <textarea id="postContent" placeholder="说点什么吧..."></textarea>
+            <input type="file" id="postImage" accept="image/*">
+            <div class="post-modal-btns">
+                <button class="post-modal-btn cancel" onclick="hidePostModal()">取消</button>
+                <button class="post-modal-btn" onclick="submitPost()">发布</button>
+            </div>
+        </div>
+    </div>
+    <svg width="0" height="0" style="position:absolute">
+      <defs>
+        <linearGradient id="like-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#a18cd1"/>
+          <stop offset="100%" stop-color="#fbc2eb"/>
+        </linearGradient>
+        <linearGradient id="fav-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#fbc2eb"/>
+          <stop offset="100%" stop-color="#f59e42"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </body>
+</html> 
