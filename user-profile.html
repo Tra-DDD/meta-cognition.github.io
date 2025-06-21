@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户主页</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(180deg, #c9e7ff 0%, #f8f9fa 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .phone-frame {
+            width: 430px;
+            height: 932px;
+            background: #fff;
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+            border: 10px solid #1a1a1a;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+        }
+        .profile-bg {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(120deg, #fbc2eb 0%, #a6c1ee 100%);
+            position: relative;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            overflow: hidden;
+        }
+        .profile-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.95);
+        }
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 5px solid #fff;
+            position: absolute;
+            left: 50%;
+            top: 160px;
+            transform: translateX(-50%);
+            box-shadow: 0 4px 16px rgba(139,92,246,0.10);
+            overflow: hidden;
+            background: #fff;
+        }
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .profile-main {
+            margin-top: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 24px;
+        }
+        .profile-name {
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 8px;
+            color: #222;
+        }
+        .profile-bio {
+            font-size: 15px;
+            color: #666;
+            margin: 8px 0 18px 0;
+            text-align: center;
+            min-height: 20px;
+        }
+        .profile-stats {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 18px;
+        }
+        .profile-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .profile-stat .num {
+            font-size: 18px;
+            font-weight: 700;
+            color: #8B5CF6;
+        }
+        .profile-stat .label {
+            font-size: 13px;
+            color: #888;
+        }
+        .profile-actions {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+        .profile-btn {
+            padding: 8px 32px;
+            border-radius: 22px;
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .profile-btn.follow {
+            background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+            color: #fff;
+        }
+        .profile-btn.message {
+            background: #fff;
+            color: #8B5CF6;
+            border: 1.5px solid #8B5CF6;
+        }
+        .profile-tabs {
+            display: flex;
+            gap: 24px;
+            margin: 18px 0 10px 0;
+            justify-content: center;
+        }
+        .profile-tab {
+            font-size: 15px;
+            color: #888;
+            cursor: pointer;
+            padding-bottom: 4px;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s, border 0.2s;
+        }
+        .profile-tab.active {
+            color: #8B5CF6;
+            border-bottom: 2px solid #8B5CF6;
+        }
+        .profile-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .gallery-img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            border-radius: 14px;
+            object-fit: cover;
+            background: #f3f0ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="back-btn" onclick="window.history.back()" style="position:absolute;top:18px;left:18px;z-index:20;background:#fff;border:1px solid #eee;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:22px;height:22px;"><path d="M15 18l-6-6 6-6" stroke-width="2"/></svg>
+        </div>
+        <div class="profile-bg" id="profileBg">
+            <!-- 可选背景图片 -->
+        </div>
+        <div class="profile-avatar" id="profileAvatar">
+            <!-- 头像 -->
+        </div>
+        <div class="profile-main">
+            <div class="profile-name" id="profileName"></div>
+            <div class="profile-bio" id="profileBio"></div>
+            <div class="profile-stats">
+                <div class="profile-stat">
+                    <span class="num" id="profileFollowers"></span>
+                    <span class="label">粉丝</span>
+                </div>
+                <div class="profile-stat">
+                    <span class="num" id="profileFollowing"></span>
+                    <span class="label">关注</span>
+                </div>
+            </div>
+            <div class="profile-actions">
+                <button class="profile-btn follow">关注</button>
+                <button class="profile-btn message">私信</button>
+            </div>
+            <div class="profile-tabs">
+                <div class="profile-tab active">全部</div>
+                <div class="profile-tab">照片</div>
+                <div class="profile-tab">视频</div>
+            </div>
+            <div class="profile-gallery" id="profileGallery">
+                <!-- 图片网格 -->
+            </div>
+        </div>
+    </div>
+    <script>
+        // 模拟用户数据
+        const users = {
+            'olivia': {
+                name: 'Olivia',
+                avatar: 'https://img.freepik.com/free-vector/cute-parrot-cartoon-character_1308-134932.jpg',
+                bg: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80',
+                bio: '热爱摄影与探险，喜欢记录自然的美好。',
+                followers: 43500,
+                following: 537,
+                gallery: [
+                    './community01/share (1).png',
+                    './community01/share (2).png',
+                    './community01/share (3).png',
+                    './community01/share (4).png',
+                    './community01/share (5).png',
+                    './community01/share (6).png',
+                ]
+            },
+            'luna': {
+                name: 'Luna',
+                avatar: 'https://img.freepik.com/free-vector/cute-macaw-cartoon-character_1308-134934.jpg',
+                bg: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80',
+                bio: '热带雨林探险家，喜欢结交新朋友。',
+                followers: 12800,
+                following: 210,
+                gallery: [
+                    './community01/share (3).png',
+                    './community01/share (1).png',
+                    './community01/share (2).png',
+                ]
+            },
+            'milo': {
+                name: 'Milo',
+                avatar: 'https://img.freepik.com/free-vector/cute-love-bird-cartoon-character_1308-134935.jpg',
+                bg: 'https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=600&q=80',
+                bio: '高山与自然的爱好者。',
+                followers: 9800,
+                following: 180,
+                gallery: [
+                    './community01/share (4).png',
+                    './community01/share (2).png',
+                ]
+            },
+            'kiwi': {
+                name: 'Kiwi',
+                avatar: 'https://img.freepik.com/free-vector/cute-cockatoo-cartoon-character_1308-134933.jpg',
+                bg: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80',
+                bio: '森林探险小能手。',
+                followers: 6700,
+                following: 99,
+                gallery: [
+                    './community01/share (5).png',
+                ]
+            },
+            'pepper': {
+                name: 'Pepper',
+                avatar: 'https://img.freepik.com/free-vector/cute-parrot-cartoon-character_1308-134932.jpg',
+                bg: 'https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=600&q=80',
+                bio: '热爱奔跑的平原小伙伴。',
+                followers: 5200,
+                following: 80,
+                gallery: [
+                    './community01/share (6).png',
+                ]
+            },
+            'avery': {
+                name: 'Avery',
+                avatar: 'https://img.freepik.com/free-icon/fried-egg_318-231722.jpg',
+                bg: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80',
+                bio: '美食探险家，喜欢发现世界各地的美味。',
+                followers: 8200,
+                following: 150,
+                gallery: [
+                    'https://img.freepik.com/free-photo/top-view-fried-egg-with-tomato-salad_23-2148784972.jpg',
+                    'https://img.freepik.com/free-photo/flat-lay-delicious-breakfast_23-2148825122.jpg',
+                    './community01/share (2).png',
+                    './community01/share (5).png',
+                    'https://img.freepik.com/free-photo/flat-lay-omelette-with-vegetables_23-2148825124.jpg',
+                ]
+            },
+            'emily': {
+                name: 'Emily',
+                avatar: 'https://img.freepik.com/free-icon/girl_318-175072.jpg',
+                bg: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=600&q=80',
+                bio: '热爱绘画和自然，喜欢和朋友一起冒险。',
+                followers: 9100,
+                following: 200,
+                gallery: [
+                    'https://img.freepik.com/free-photo/child-drawing-nature_23-2148825126.jpg',
+                    './community01/share (3).png',
+                    './community01/share (4).png',
+                    'https://img.freepik.com/free-photo/children-playing-park_23-2148825128.jpg',
+                ]
+            },
+            'aurora': {
+                name: 'Aurora',
+                avatar: 'https://img.freepik.com/free-icon/gift_318-231150.jpg',
+                bg: 'https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=600&q=80',
+                bio: '喜欢分享和收集快乐的小伙伴。',
+                followers: 7600,
+                following: 120,
+                gallery: [
+                    'https://img.freepik.com/free-photo/gift-boxes-colorful-background_23-2148825130.jpg',
+                    './community01/share (6).png',
+                    'https://img.freepik.com/free-photo/party-friends-celebration_23-2148825132.jpg',
+                ]
+            }
+        };
+        // 获取query参数
+        function getQuery(name) {
+            const url = window.location.search;
+            const params = new URLSearchParams(url);
+            return params.get(name);
+        }
+        function formatNum(num) {
+            if (num >= 10000) return (num/10000).toFixed(1) + 'w';
+            return num;
+        }
+        // 渲染用户信息
+        function renderProfile(userKey) {
+            const user = users[userKey] || users['olivia'];
+            document.getElementById('profileBg').innerHTML = `<img src="${user.bg}" alt="bg">`;
+            document.getElementById('profileAvatar').innerHTML = `<img src="${user.avatar}" alt="avatar">`;
+            document.getElementById('profileName').textContent = user.name;
+            document.getElementById('profileBio').textContent = user.bio;
+            document.getElementById('profileFollowers').textContent = formatNum(user.followers);
+            document.getElementById('profileFollowing').textContent = formatNum(user.following);
+            const gallery = user.gallery.map(img => `<img class='gallery-img' src='${img}' alt='动态图片'>`).join('');
+            document.getElementById('profileGallery').innerHTML = gallery;
+        }
+        const userKey = getQuery('user') || 'olivia';
+        renderProfile(userKey);
+    </script>
+</body>
+</html> 

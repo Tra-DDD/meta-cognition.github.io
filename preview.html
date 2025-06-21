@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鹦鹉历险记 - 登录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            min-height: 100vh;
+            background: #F8F9FA;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .phone-frame {
+            width: 430px;
+            height: 932px;
+            background: white;
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+            border: 10px solid #1a1a1a;
+            margin: 20px auto;
+            position: fixed;
+            top: 48%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .phone-screen {
+            height: 100%;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background: linear-gradient(45deg, #91D8E4, #BFEAF5, #FFF4D2, #FFE5F1);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .login-container {
+            position: relative;
+            width: 100%;
+            max-width: 360px;
+            padding: 0 20px;
+            margin: 0 auto;
+        }
+
+        .parrots-container {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            right: 0;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 10px;
+            z-index: 2;
+        }
+
+        .parrot {
+            width: 50px;
+            height: 60px;
+            position: relative;
+            cursor: pointer;
+            transform-origin: bottom center;
+            animation: peekDown 3s ease-in-out infinite;
+        }
+
+        .parrot:nth-child(1) { animation-delay: 0s; }
+        .parrot:nth-child(2) { animation-delay: 0.2s; }
+        .parrot:nth-child(3) { animation-delay: 0.4s; }
+        .parrot:nth-child(4) { animation-delay: 0.6s; }
+        .parrot:nth-child(5) { animation-delay: 0.8s; }
+
+        @keyframes peekDown {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(5px); }
+        }
+
+        .parrot-head {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50% 50% 35% 35%;
+            transition: all 0.3s ease;
+        }
+
+        .parrot-eye {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #000;
+            border-radius: 50%;
+            top: 40%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .parrot-smile {
+            position: absolute;
+            width: 20px;
+            height: 10px;
+            border: 2px solid #000;
+            border-radius: 0 0 20px 20px;
+            border-top: 0;
+            bottom: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .parrot:nth-child(1) .parrot-head { background: #FFE5F1; }
+        .parrot:nth-child(2) .parrot-head { background: #FFB4B4; }
+        .parrot:nth-child(3) .parrot-head { background: #FFF4D2; }
+        .parrot:nth-child(4) .parrot-head { background: #BFEAF5; }
+        .parrot:nth-child(5) .parrot-head { background: #91D8E4; }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .input:focus {
+            outline: none;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .sign-in-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #FF9A9E, #FAD0C4);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 154, 158, 0.3);
+        }
+
+        .sign-in-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 154, 158, 0.4);
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .forgot-password a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            color: #FF9A9E;
+        }
+
+        .social-login {
+            text-align: center;
+            margin-top: 30px;
+            position: relative;
+        }
+
+        .social-text {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-text::before,
+        .social-text::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: rgba(0, 0, 0, 0.1);
+            margin: 0 10px;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .social-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .social-icon:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-icon img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .register-link {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-bottom: 2px;
+        }
+
+        .register-link:hover {
+            color: #FF9A9E;
+        }
+
+        .register-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #FF9A9E, transparent);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .register-link:hover::after {
+            transform: scaleX(1);
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="phone-screen">
+            <div class="login-container">
+                <div class="parrots-container">
+                    <!-- 五只可爱的鹦鹉 -->
+                    <div class="parrot">
+                        <div class="parrot-head">
+                            <div class="parrot-eye"></div>
+                            <div class="parrot-smile"></div>
+                        </div>
+                    </div>
+                    <div class="parrot">
+                        <div class="parrot-head">
+                            <div class="parrot-eye"></div>
+                            <div class="parrot-smile"></div>
+                        </div>
+                    </div>
+                    <div class="parrot">
+                        <div class="parrot-head">
+                            <div class="parrot-eye"></div>
+                            <div class="parrot-smile"></div>
+                        </div>
+                    </div>
+                    <div class="parrot">
+                        <div class="parrot-head">
+                            <div class="parrot-eye"></div>
+                            <div class="parrot-smile"></div>
+                        </div>
+                    </div>
+                    <div class="parrot">
+                        <div class="parrot-head">
+                            <div class="parrot-eye"></div>
+                            <div class="parrot-smile"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="login-card">
+                    <div class="input-group">
+                        <input type="email" class="input" id="username" placeholder="邮箱/用户名">
+                    </div>
+                    <div class="input-group">
+                        <input type="password" class="input" id="password" placeholder="密码">
+                    </div>
+
+                    <button class="sign-in-btn" onclick="handleLogin()">登 录</button>
+
+                    <div class="forgot-password">
+                        <a href="#">忘记密码？</a>
+                    </div>
+
+                    <div class="social-login">
+                        <div class="social-text">其他登录方式</div>
+                        <div class="social-icons">
+                            <div class="social-icon">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzNCNTk5OCIgZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTMuOTIgMTAuMmgtMi42MXYxMC4yaC0zLjgzVjEyLjJINy45MlY4LjloMS44NlY2LjhjMC0xLjU0LjczLTMuOTYgMy45Ni0zLjk2bDIuOTEuMDF2My4yNGgtMi4xMWMtLjM1IDAtLjgzLjE3LS44My44OXYxLjkyaDIuOTZsLS4zNSAzLjN6Ii8+PC9zdmc+" alt="Facebook">
+                            </div>
+                            <div class="social-icon">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzFEQTFGMiIgZD0iTTIyLjQ2IDYuMDEyYy0uODIuMzctMS42OC42Mi0yLjYuNzNhNC41MiA0LjUyIDAgMCAwIDItMi41MyA5IDkgMCAwIDEtMi44OCAxLjEgNC41MiA0LjUyIDAgMCAwLTcuNyA0LjEyIDEyLjg0IDEyLjg0IDAgMCAxLTkuMy00LjcyIDQuNTMgNC41MyAwIDAgMCAxLjQgNi4wMiA0LjUgNC41IDAgMCAxLTIuMDQtLjU2di4wNWE0LjUyIDQuNTIgMCAwIDAgMy42MiA0LjQzIDQuNTMgNC41MyAwIDAgMS0yLjA0LjA4IDQuNTEgNC41MSAwIDAgMCA0LjIyIDMuMTMgOS4wNSA5LjA1IDAgMCAxLTUuNTggMS45NSAxMi44NCAxMi44NCAwIDAgMCA2Ljk2IDIuMDRjOC4zNSAwIDEyLjkyLTYuOTIgMTIuOTItMTIuOTIgMC0uMiAwLS40LS4wMi0uNTZhOS4yNiA5LjI2IDAgMCAwIDIuMjctMi4zNnoiLz48L3N2Zz4=" alt="Twitter">
+                            </div>
+                            <div class="social-icon">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI0RDNDUzRSIgZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTUuNDYgMTMuMzNjLS4zNSAxLjU5LTEuNTkgMi44MS0zLjEyIDMuMTZDMTIuOTYgMTguOSAxMS41IDE5IDEwIDE5Yy0zLjE0IDAtNS41LTEuMjEtNy43OC0zLjE3LS4yLS4xNy0uMjgtLjQ2LS4yMS0uNjkuMTktLjU1IDEuMDUtLjkyIDIuMDQtMS4xNy45OS0uMjUgMS44Ny0uNDUgMi42NS0uNDUuMzkgMCAuNzUuMDcgMS4wOC4yMi4zNi4xNi43Mi4zOCAxLjA4LjY0LjM3LjI2Ljc0LjQ4IDEuMTUuNjMuNDIuMTUuODguMjIgMS4zNi4yMi40OCAwIC45NC0uMDcgMS4zNi0uMjIuNDEtLjE1Ljc4LS4zNyAxLjE1LS42My4zNi0uMjYuNzItLjQ4IDEuMDgtLjY0LjMzLS4xNS42OS0uMjIgMS4wOC0uMjIuNzggMCAxLjY2LjIgMi42NS40NS45OS4yNSAxLjg1LjYyIDIuMDQgMS4xNy4wNy4yMy0uMDEuNTItLjIxLjY5eiIvPjwvc3ZnPg==" alt="Google">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="auth-links">
+                        <a href="register.html" class="register-link">还没有账号？立即注册</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 添加鼠标悬停效果
+        document.querySelectorAll('.parrot').forEach(parrot => {
+            parrot.addEventListener('mouseover', function() {
+                const head = this.querySelector('.parrot-head');
+                head.style.transform = 'scale(1.1) translateY(-5px)';
+                head.style.transition = 'transform 0.3s ease';
+            });
+            
+            parrot.addEventListener('mouseout', function() {
+                const head = this.querySelector('.parrot-head');
+                head.style.transform = '';
+            });
+        });
+
+        // 登录处理函数
+        function handleLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // 简单的表单验证
+            if (!username || !password) {
+                alert('请输入用户名和密码');
+                return;
+            }
+
+            // 这里可以添加实际的登录验证逻辑
+            // 模拟登录成功
+            localStorage.setItem('username', username); // 保存用户信息
+            window.location.href = 'index.html'; // 跳转到首页
+        }
+    </script>
+</body>
+</html> 

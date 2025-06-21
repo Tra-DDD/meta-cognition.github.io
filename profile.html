@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的鹦鹉 - 个人中心</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            min-height: 100vh;
+            background: #F8F9FA;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .phone-frame {
+            width: 430px;
+            height: 932px;
+            background: white;
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+            border: 10px solid #1a1a1a;
+            margin: 20px auto;
+            position: fixed;
+            top: 48%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .phone-screen {
+            height: 100%;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .main-content {
+            padding: 20px;
+            height: auto;
+            min-height: min-content;
+            padding-bottom: 80px;
+        }
+
+        .header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .header-title .welcome {
+            font-size: 16px;
+            font-weight: 400;
+            color: #666;
+        }
+
+        .header-title .main-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        /* 导航栏样式 */
+        .nav-bar {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            width: auto;
+            min-width: 420px;
+            gap: 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            color: #666;
+            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-item.active {
+            color: #8B5CF6;
+            background: rgba(139, 92, 246, 0.1);
+            min-width: max-content;
+        }
+
+        .nav-icon {
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* 隐藏非活动项的文本 */
+        .nav-item:not(.active) span {
+            display: none;
+        }
+
+        /* 活动项显示文本 */
+        .nav-item.active span {
+            display: block;
+        }
+
+        @media (max-width: 480px) {
+            .nav-bar {
+                min-width: 360px;
+                padding: 8px 12px;
+                gap: 8px;
+            }
+            
+            .nav-item {
+                padding: 6px 10px;
+            }
+        }
+
+        /* 个人页面特定样式 */
+        .profile-content {
+            padding: 20px 0;
+        }
+
+        .profile-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-info {
+            text-align: center;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .profile-bio {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* 用户统计信息样式 */
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px 0;
+            margin: 20px 0;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #8B5CF6;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* 设置选项样式 */
+        .profile-settings {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .settings-group {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .settings-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .settings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .settings-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 12px;
+            transition: background-color 0.2s;
+        }
+
+        .settings-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .settings-icon {
+            font-size: 20px;
+            margin-right: 12px;
+        }
+
+        .settings-text {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .settings-arrow {
+            color: #999;
+            font-size: 20px;
+        }
+
+        /* 退出登录按钮样式 */
+        .logout-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            margin-top: 24px;
+            background: #fff;
+            border-radius: 16px;
+            color: #ff4d4f;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background: #fff1f0;
+        }
+
+        .logout-icon {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="phone-frame">
+        <div class="phone-screen">
+            <div class="main-content">
+                <header class="header">
+                    <h1 class="header-title">
+                        <span class="welcome">个人中心</span>
+                        <span class="main-title">我的鹦鹉</span>
+                    </h1>
+                </header>
+
+                <div class="profile-content">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <img src="https://img.freepik.com/free-vector/cute-parrot-cartoon-character_1308-134932.jpg" alt="个人头像">
+                        </div>
+                        <div class="profile-info">
+                            <h2 class="profile-name">小鹦鹉</h2>
+                            <p class="profile-bio">让我们一起探索鹦鹉的奇妙世界吧！</p>
+                        </div>
+                    </div>
+
+                    <!-- 用户统计信息 -->
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">128</span>
+                            <span class="stat-label">探险天数</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">8步</span>
+                            <span class="stat-label">最短路径</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">15</span>
+                            <span class="stat-label">连续探险</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">56</span>
+                            <span class="stat-label">收藏路径</span>
+                        </div>
+                    </div>
+
+                    <!-- 设置选项 -->
+                    <div class="profile-settings">
+                        <div class="settings-group">
+                            <h3 class="settings-title">账号设置</h3>
+                            <div class="settings-list">
+                                <a href="#" class="settings-item">
+                                    <span class="settings-icon">👤</span>
+                                    <span class="settings-text">个人信息</span>
+                                    <span class="settings-arrow">›</span>
+                                </a>
+                                <a href="#" class="settings-item">
+                                    <span class="settings-icon">🔔</span>
+                                    <span class="settings-text">通知设置</span>
+                                    <span class="settings-arrow">›</span>
+                                </a>
+                                <a href="#" class="settings-item">
+                                    <span class="settings-icon">🔒</span>
+                                    <span class="settings-text">隐私设置</span>
+                                    <span class="settings-arrow">›</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3 class="settings-title">探险设置</h3>
+                            <div class="settings-list">
+                                <a href="#" class="settings-item">
+                                    <span class="settings-icon">🏆</span>
+                                    <span class="settings-text">我的徽章</span>
+                                    <span class="settings-arrow">›</span>
+                                </a>
+                                <a href="#" class="settings-item">
+                                    <span class="settings-icon">📚</span>
+                                    <span class="settings-text">学习记录</span>
+                                    <span class="settings-arrow">›</span>
+                                </a>
+                                <a href="#" class="settings-item">
+                                    <span class="settings-icon">⭐</span>
+                                    <span class="settings-text">收藏夹</span>
+                                    <span class="settings-arrow">›</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 退出登录按钮 -->
+                    <a href="preview.html" class="logout-button">
+                        <span class="logout-icon">🚪</span>
+                        <span>退出登录</span>
+                    </a>
+                </div>
+
+                <!-- 底部导航栏 -->
+                <nav class="nav-bar">
+                    <a href="index.html" class="nav-item">
+                        <div class="nav-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 3L4 9V21H20V9L12 3ZM10 19H8V12H10V19ZM14 19H12V14H14V19ZM18 19H16V16H18V19Z"/>
+                            </svg>
+                        </div>
+                        <span>探险主岛</span>
+                    </a>
+                    <a href="community.html" class="nav-item">
+                        <div class="nav-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM12 11C11.4 11 11 10.6 11 10C11 9.4 11.4 9 12 9C12.6 9 13 9.4 13 10C13 10.6 12.6 11 12 11ZM16 11C15.4 11 15 10.6 15 10C15 9.4 15.4 9 16 9C16.6 9 17 9.4 17 10C17 10.6 16.6 11 16 11ZM8 11C7.4 11 7 10.6 7 10C7 9.4 7.4 9 8 9C8.6 9 9 9.4 9 10C9 10.6 8.6 11 8 11Z"/>
+                            </svg>
+                        </div>
+                        <span>探险交流</span>
+                    </a>
+                    <a href="knowledge.html" class="nav-item">
+                        <div class="nav-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/>
+                            </svg>
+                        </div>
+                        <span>知识岛屿</span>
+                    </a>
+                    <a href="profile.html" class="nav-item active">
+                        <div class="nav-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 5C13.66 5 15 6.34 15 8C15 9.66 13.66 11 12 11C10.34 11 9 9.66 9 8C9 6.34 10.34 5 12 5ZM12 19.2C9.5 19.2 7.29 17.92 6 15.98C6.03 13.99 10 12.9 12 12.9C13.99 12.9 17.97 13.99 18 15.98C16.71 17.92 14.5 19.2 12 19.2Z"/>
+                            </svg>
+                        </div>
+                        <span>我的鹦鹉</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html> 

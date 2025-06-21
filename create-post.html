@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发布帖子</title>
+    <style>
+        body {
+            min-height: 100vh;
+            min-width: 100vw;
+            margin: 0;
+            padding: 0;
+            background: #F8F9FA;
+            color: #333;
+            display: flex;
+            align-items: stretch;
+            justify-content: stretch;
+            letter-spacing: 0.02em;
+            line-height: 1.7;
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        }
+        .phone-frame {
+            width: 100vw;
+            height: 100vh;
+            background: white;
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+            border: 10px solid #1a1a1a;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        .phone-screen {
+            height: 100%;
+            overflow-y: auto;
+            padding-bottom: 70px;
+        }
+        .main-content {
+            padding: 24px 20px 80px 20px;
+            padding-top: 56px;
+            padding-bottom: 90px;
+        }
+        .back-btn {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            z-index: 10;
+        }
+        .back-btn svg {
+            width: 22px;
+            height: 22px;
+        }
+        .post-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .post-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .post-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+        .post-content {
+            width: 100%;
+            height: 150px;
+            padding: 12px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            resize: none;
+        }
+        .post-image-upload {
+            width: 100%;
+            height: 200px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: #f9f9f9;
+        }
+        .post-image-upload:hover {
+            border-color: #8B5CF6;
+        }
+        .post-button {
+            background: #8B5CF6;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .post-button:hover {
+            background: #7c4cf0;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="phone-screen">
+            <div class="main-content">
+                <div class="back-btn" onclick="window.history.back()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 18l-6-6 6-6" stroke-width="2"/></svg>
+                </div>
+                <div class="post-form">
+                    <div class="post-title">发布帖子</div>
+                    <input type="text" class="post-input" placeholder="标题" />
+                    <textarea class="post-content" placeholder="内容"></textarea>
+                    <div class="post-image-upload" onclick="document.getElementById('fileInput').click()">
+                        <input type="file" id="fileInput" style="display: none;" accept="image/*" />
+                        <span>点击上传图片</span>
+                    </div>
+                    <button class="post-button" onclick="submitPost()">发布</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function submitPost() {
+            // 这里可以添加发布帖子的逻辑
+            alert('帖子发布成功！');
+            window.location.href = 'community.html';
+        }
+    </script>
+</body>
+</html> 
